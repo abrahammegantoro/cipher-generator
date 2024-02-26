@@ -13,9 +13,19 @@ import {
   decryptAutoKeyVigenereCipher,
 } from "./utils/cipher/autoKeyVigenereCipher";
 import { decodeAffine, encodeAffine } from "./utils/cipher/affineCipher";
+import {
+  decryptTransposeCipher,
+  encryptTransposeCipher,
+} from "./utils/cipher/transposeCipher";
+import {
+  decryptProductCipher,
+  encryptProductCipher,
+} from "./utils/cipher/productCipher";
 
 function App() {
   const [text, setText] = useState("");
+  const [textTranspose, setTextTranspose] = useState("");
+  const [key, setKey] = useState("");
   const [a, setA] = useState(0);
   const [b, setB] = useState(0);
   const [textAffine, setTextAffine] = useState("");
@@ -90,8 +100,46 @@ function App() {
             </div>
           </div>
         </div>
+        <h3>Result: {resultAffine}</h3>
       </div>
-      <h3>Result: {resultAffine}</h3>
+
+      <div>
+        <h1>Transpose Cipher</h1>
+        <input
+          type="text"
+          value={textTranspose}
+          onChange={(e) => setTextTranspose(e.target.value)}
+        />
+
+        <p>
+          Encrypted Transpose Cipher :{" "}
+          {encryptTransposeCipher(textTranspose, 6)}
+        </p>
+        <p>
+          Decrypted Transpose Cipher :{" "}
+          {decryptTransposeCipher(textTranspose, 6)}
+        </p>
+      </div>
+
+      <div>
+        <h1>Product Cipher</h1>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Enter your text here!"
+        />
+
+        <h1>Key</h1>
+        <input
+          type="text"
+          value={key}
+          onChange={(e) => setKey(e.target.value)}
+          placeholder="Enter your key here!"
+        />
+        <p>Encrypyted : {encryptProductCipher(text, key)}</p>
+        <p>Decrypted : {decryptProductCipher(text, key)}</p>
+      </div>
     </div>
   );
 }
