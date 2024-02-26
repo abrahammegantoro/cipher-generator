@@ -3,6 +3,7 @@ import './App.css'
 import { encryptVigenereCipher, decryptVigenereCipher } from './utils/cipher/vigenereCipher'
 import { encryptExtendedVigenereCipher, decryptExtendedVigenereCipher } from './utils/cipher/extendedVigenereCipher'
 import { encryptAutoKeyVigenereCipher, decryptAutoKeyVigenereCipher } from './utils/cipher/autoKeyVigenereCipher'
+import { encryptPlayfairCipher, decryptPlayfairCypher } from './utils/cipher/playfairCipher'
 
 function App() {
   const [text, setText] = useState("")
@@ -15,7 +16,7 @@ function App() {
         onChange={(e) => setText(e.target.value)}
       >
       </input>
-      <p>Encrypted: {decryptAutoKeyVigenereCipher(text, "indo")}</p>
+      <p>Encrypted: {decryptPlayfairCypher(text, "jalan ganesha sepuluh")}</p>
     </div>
   )
 }
