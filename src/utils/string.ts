@@ -79,6 +79,14 @@ function uint8ArrayToAscii (uint8Array: Uint8Array) {
   return result;
 }
 
+function convertArrayToAscii(cipheredArray: Uint8Array): string {
+  let asciiString = '';
+  for (let i = 0; i < cipheredArray.length; i++) {
+    asciiString += String.fromCharCode(cipheredArray[i]);
+  }
+  return asciiString;
+}
+
 export {
   removeNonAplhabet,
   removeNonAlphabetExceptSpace,
@@ -89,5 +97,6 @@ export {
   isUpperCase,
   isLowerCase,
   isAlphabetic,
-  uint8ArrayToAscii
+  uint8ArrayToAscii,
+  convertArrayToAscii
 };

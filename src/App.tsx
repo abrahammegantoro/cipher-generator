@@ -1,7 +1,6 @@
 import { useState } from "react";
 import inputSection from "./utils/InputSection";
 import { decryptText, encryptText } from "./utils/runnerCipher";
-// import { uint8ArrayToAscii } from "./utils/string";
 
 function App() {
   const [encrypt, setEncrypt] = useState(true);
@@ -40,8 +39,7 @@ function App() {
       (encrypt
         ? encryptText(type, text, key, affineM, affineB, column)
         : decryptText(type, text, key, affineM, affineB, column)) ?? "";
-    
-    
+
     const element = document.createElement("a");
     const file = new Blob([content], { type: fileDetail.type });
     element.href = URL.createObjectURL(file);
@@ -89,17 +87,15 @@ function App() {
     <div className="bg-blue-200 flex flex-col gap-12 p-14 items-center justify-center min-h-screen">
       <div className="flex gap-4 text-4xl font-semibold">
         <div
-          className={`cursor-pointer ${
-            encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          className={`cursor-pointer ${encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
+            } p-4 rounded-lg`}
           onClick={() => setEncrypt(true)}
         >
           <h1 className="">Encryption</h1>
         </div>
         <div
-          className={`cursor-pointer ${
-            !encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          className={`cursor-pointer ${!encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
+            } p-4 rounded-lg`}
           onClick={() => setEncrypt(false)}
         >
           <h1>Decryption</h1>
@@ -169,8 +165,8 @@ function App() {
               errorAffine
                 ? "m must be relatively prime with 26"
                 : encrypt
-                ? encryptText(type, text, key, affineM, affineB, column)?.toString()
-                : decryptText(type, text, key, affineM, affineB, column)?.toString()
+                  ? encryptText(type, text, key, affineM, affineB, column)?.toString()
+                  : decryptText(type, text, key, affineM, affineB, column)?.toString()
             }
             disabled
           />

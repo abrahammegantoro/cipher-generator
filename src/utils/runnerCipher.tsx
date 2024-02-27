@@ -4,10 +4,8 @@ import {
   encryptAutoKeyVigenereCipher,
 } from "./cipher/autoKeyVigenereCipher";
 import {
-  // decryptExtendedVigenereCipher,
-  decryptExtendedVigenerecipherUint8Array,
-  // encryptExtendedVigenereCipher,
-  encryptExtendedVigenerecipherUint8Array,
+  decryptExtendedVigenereCipher,
+  encryptExtendedVigenereCipher,
 } from "./cipher/extendedVigenereCipher";
 import {
   decryptPlayfairCypher,
@@ -33,8 +31,7 @@ const encryptText = (
   if (type === "vigenere") {
     return encryptVigenereCipher(text as string, key);
   } else if (type === "extendedvigenere") {
-    // return encryptExtendedVigenereCipher(text, key);
-    return encryptExtendedVigenerecipherUint8Array(text as Uint8Array, key);
+    return encryptExtendedVigenereCipher(text as Uint8Array, key);
   } else if (type === "autokey") {
     return encryptAutoKeyVigenereCipher(text as string, key);
   } else if (type === "affine") {
@@ -57,8 +54,7 @@ const decryptText = (
   if (type === "vigenere") {
     return decryptVigenereCipher(text as string, key);
   } else if (type === "extendedvigenere") {
-    // return decryptExtendedVigenereCipher(text, key);
-    return decryptExtendedVigenerecipherUint8Array(text as Uint8Array, key);
+    return decryptExtendedVigenereCipher(text, key);
   } else if (type === "autokey") {
     return decryptAutoKeyVigenereCipher(text as string, key);
   } else if (type === "affine") {
