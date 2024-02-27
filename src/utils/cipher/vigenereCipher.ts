@@ -2,13 +2,12 @@ import { removeNonAplhabet, isUpperCase } from "../string";
 
 function encryptVigenereCipher(message: string, key: string) {
   message = removeNonAplhabet(message);
+  key = removeNonAplhabet(key);
   
   let result = "";
   for (let i = 0; i < message.length; i++) {
     const charCode = message.charCodeAt(i);
     const keyChar = key.charCodeAt(i % key.length);
-
-    console.log(keyChar)
 
     if (isUpperCase(message[i]) && isUpperCase(key[i % key.length])) {
       result += String.fromCharCode(((charCode - 65 + keyChar - 65) % 26) + 65);

@@ -2,8 +2,15 @@ function removeNonAplhabet(input: string) {
   return input.replace(/[^a-zA-Z]/g, "");
 }
 
+function removeNonAlphabetExceptSpace(input: string) {
+  return input.replace(/[^a-zA-Z\s]/g, "");
+}
+
 function removeChar(input: string, char: string) {
-  return input.split("").filter((item) => item !== char).join("");
+  return input
+    .split("")
+    .filter((item) => item !== char)
+    .join("");
 }
 
 function isUpperCase(char: string | undefined) {
@@ -12,6 +19,10 @@ function isUpperCase(char: string | undefined) {
 
 function isLowerCase(char: string) {
   return char === char.toLowerCase();
+}
+
+function isAlphabetic(char: string) {
+  return char.match(/[a-z]/i);
 }
 
 function removeDuplicates(input: string) {
@@ -59,4 +70,14 @@ function bigram(input: string) {
   return result;
 }
 
-export { removeNonAplhabet, removeChar, removeDuplicates, replaceChar, bigram, isUpperCase, isLowerCase};
+export {
+  removeNonAplhabet,
+  removeNonAlphabetExceptSpace,
+  removeChar,
+  removeDuplicates,
+  replaceChar,
+  bigram,
+  isUpperCase,
+  isLowerCase,
+  isAlphabetic,
+};

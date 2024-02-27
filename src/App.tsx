@@ -212,7 +212,7 @@ function App() {
               <strong>b</strong>
             </div>
           </div>
-          
+
           {!isFile ? (
             <textarea
               className="border border-gray-200 min-h-48 p-4 text-base rounded-lg"
