@@ -27,6 +27,29 @@ function App() {
   const [column, setColumn] = useState(0);
   const [isFile, setIsFile] = useState(false);
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        const content = reader.result;
+        if (file.type === "text/plain") {
+          setText(content as string);
+        } else {
+          if (type === "extendedvigenere") {
+            const byteArray = new Uint8Array(content as ArrayBuffer);
+            setText(byteArray.join(" "));
+          } else {
+            setText(content as string);
+          }
+        }
+      };
+
+      reader.readAsText(file);
+    }
+  };
+
   const inputSection = (type: string) => {
     if (
       type === "vigenere" ||
@@ -39,9 +62,8 @@ function App() {
         <div className="flex flex-col gap-4">
           <div className="flex gap-2 justify-around">
             <strong
-              className={`cursor-pointer ${
-                !isFile ? "text-blue-200" : "text-black"
-              }`}
+              className={`cursor-pointer ${!isFile ? "text-blue-200" : "text-black"
+                }`}
               onClick={() => {
                 setIsFile(false);
               }}
@@ -50,9 +72,8 @@ function App() {
             </strong>
             <p>or</p>
             <strong
-              className={`cursor-pointer ${
-                isFile ? "text-blue-200" : "text-black"
-              }`}
+              className={`cursor-pointer ${isFile ? "text-blue-200" : "text-black"
+                }`}
               onClick={() => {
                 setIsFile(true);
               }}
@@ -94,7 +115,7 @@ function App() {
                     PDF
                   </p>
                 </div>
-                <input id="dropzone-file" type="file" className="hidden" />
+                <input id="dropzone-file" type="file" className="hidden" onChange={(event) => handleFileUpload(event, type)} />
               </label>
             </div>
           )}
@@ -126,9 +147,8 @@ function App() {
         <div className="flex flex-col gap-4">
           <div className="flex gap-2 justify-around">
             <strong
-              className={`cursor-pointer ${
-                !isFile ? "text-blue-200" : "text-black"
-              }`}
+              className={`cursor-pointer ${!isFile ? "text-blue-200" : "text-black"
+                }`}
               onClick={() => {
                 setIsFile(false);
               }}
@@ -137,9 +157,8 @@ function App() {
             </strong>
             <p>or</p>
             <strong
-              className={`cursor-pointer ${
-                isFile ? "text-blue-200" : "text-black"
-              }`}
+              className={`cursor-pointer ${isFile ? "text-blue-200" : "text-black"
+                }`}
               onClick={() => {
                 setIsFile(true);
               }}
@@ -247,7 +266,7 @@ function App() {
                     PDF
                   </p>
                 </div>
-                <input id="dropzone-file" type="file" className="hidden" />
+                <input id="dropzone-file" type="file" className="hidden" onChange={(event) => handleFileUpload(event, type)} />
               </label>
             </div>
           )}
@@ -279,7 +298,7 @@ function App() {
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">PDF</p>
             </div>
-            <input id="dropzone-file" type="file" className="hidden" />
+            <input id="dropzone-file" type="file" className="hidden" onChange={(event) => handleFileUpload(event, type)} />
           </label>
         </div>
       );
@@ -322,17 +341,15 @@ function App() {
     <div className="bg-blue-200 flex flex-col gap-12 p-14 items-center justify-center min-h-screen">
       <div className="flex gap-4 text-4xl font-semibold">
         <div
-          className={`cursor-pointer ${
-            encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          className={`cursor-pointer ${encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
+            } p-4 rounded-lg`}
           onClick={() => setEncrypt(true)}
         >
           <h1 className="">Encryption</h1>
         </div>
         <div
-          className={`cursor-pointer ${
-            !encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          className={`cursor-pointer ${!encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
+            } p-4 rounded-lg`}
           onClick={() => setEncrypt(false)}
         >
           <h1>Decryption</h1>
@@ -357,6 +374,21 @@ function App() {
         </div>
 
         <div className="bg-white p-8 w-96 flex flex-col gap-4 rounded-xl">
+          {isFile && (
+            <>
+              <div className="">
+                <strong className="text-center">
+                  {encrypt ? "Plain Text" : "Ciphertext"}
+                </strong>
+              </div>
+
+              <textarea
+                className="border border-gray-200 p-4 rounded-lg h-full"
+                value={text}
+                disabled
+              />
+            </>
+          )}
           <div className="">
             <strong className="text-center">
               {encrypt ? "Ciphertext" : "Plain Text"}
