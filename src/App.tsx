@@ -1,21 +1,6 @@
 import { useState } from "react";
-import {
-  encryptVigenereCipher,
-  decryptVigenereCipher,
-} from "./utils/cipher/vigenereCipher";
-import {
-  encryptExtendedVigenereCipher,
-  decryptExtendedVigenereCipher,
-} from "./utils/cipher/extendedVigenereCipher";
-import {
-  encryptAutoKeyVigenereCipher,
-  decryptAutoKeyVigenereCipher,
-} from "./utils/cipher/autoKeyVigenereCipher";
-import { decodeAffine, encodeAffine } from "./utils/cipher/affineCipher";
-import {
-  decryptProductCipher,
-  encryptProductCipher,
-} from "./utils/cipher/productCipher";
+import inputSection from "./utils/InputSection";
+import { decryptText, encryptText } from "./utils/runnerCipher";
 
 function App() {
   const [encrypt, setEncrypt] = useState(true);
@@ -28,7 +13,10 @@ function App() {
   const [isFile, setIsFile] = useState(false);
 
   const handleDownload = () => {
-    const content = (encrypt ? encryptText() : decryptText()) ?? "";
+    const content =
+      (encrypt
+        ? encryptText(type, text, key, affineM, affineB, column)
+        : decryptText(type, text, key, affineM, affineB, column)) ?? "";
     const element = document.createElement("a");
     const file = new Blob([content], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
@@ -60,312 +48,6 @@ function App() {
       };
 
       reader.readAsText(file);
-    }
-  };
-
-  const inputSection = (type: string) => {
-    if (
-      type === "vigenere" ||
-      type === "autokey" ||
-      type === "extendedvigenere" ||
-      type === "product" ||
-      type === "playfair"
-    ) {
-      return (
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-2 justify-around">
-            <strong
-              className={`cursor-pointer ${
-                !isFile ? "text-blue-200" : "text-black"
-              }`}
-              onClick={() => {
-                setIsFile(false);
-              }}
-            >
-              {encrypt ? "Plain Text" : "Ciphertext"}
-            </strong>
-            <p>or</p>
-            <strong
-              className={`cursor-pointer ${
-                isFile ? "text-blue-200" : "text-black"
-              }`}
-              onClick={() => {
-                setIsFile(true);
-              }}
-            >
-              File
-            </strong>
-          </div>
-          {!isFile ? (
-            <textarea
-              className="border border-gray-200 min-h-48 p-4 text-base rounded-lg"
-              placeholder="Enter your text here"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          ) : (
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg
-                    className="w-8 h-8 mb-4 text-gray-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
-                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span className="font-semibold">Click to upload</span> or
-                    drag and drop
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    PDF
-                  </p>
-                </div>
-                <input
-                  id="dropzone-file"
-                  type="file"
-                  className="hidden"
-                  onChange={(event) => handleFileUpload(event, type)}
-                />
-              </label>
-            </div>
-          )}
-
-          <strong>Key</strong>
-          <textarea
-            className="border border-gray-200 p-4 text-base rounded-lg"
-            placeholder="Enter your key here"
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
-          />
-
-          {type === "product" && (
-            <>
-              <strong>Column</strong>
-              <input
-                type="number"
-                className="border border-gray-200 p-4 text-base rounded-lg"
-                placeholder="Enter your k here"
-                value={column}
-                onChange={(e) => setColumn(parseInt(e.target.value))}
-              />
-            </>
-          )}
-        </div>
-      );
-    } else if (type === "affine") {
-      return (
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-2 justify-around">
-            <strong
-              className={`cursor-pointer ${
-                !isFile ? "text-blue-200" : "text-black"
-              }`}
-              onClick={() => {
-                setIsFile(false);
-              }}
-            >
-              {encrypt ? "Plain Text" : "Ciphertext"}
-            </strong>
-            <p>or</p>
-            <strong
-              className={`cursor-pointer ${
-                isFile ? "text-blue-200" : "text-black"
-              }`}
-              onClick={() => {
-                setIsFile(true);
-              }}
-            >
-              File
-            </strong>
-          </div>
-
-          <div className="flex justify-around">
-            <div className="flex flex-col items-center">
-              <div className="flex gap-2 items-center">
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    if (affineM <= 1) return;
-                    setAffineM(affineM - 1);
-                  }}
-                >
-                  -
-                </p>
-                <input
-                  type="text"
-                  className="border text-center border-gray-200 p-1 w-20 text-base rounded-lg"
-                  placeholder=""
-                  value={affineM}
-                  onChange={(e) => setAffineM(parseInt(e.target.value))}
-                />
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    if (affineM < 0) return;
-                    setAffineM(affineM + 1);
-                  }}
-                >
-                  +
-                </p>
-              </div>
-
-              <strong>m</strong>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-2">
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    if (affineB <= 0) return;
-                    setAffineB(affineB - 1);
-                  }}
-                >
-                  -
-                </p>
-                <input
-                  type="text"
-                  className="border text-center border-gray-200 p-1 w-20 text-base rounded-lg"
-                  placeholder=""
-                  value={affineB}
-                  onChange={(e) => setAffineB(parseInt(e.target.value))}
-                />
-                <p
-                  className="cursor-pointer"
-                  onClick={() => {
-                    if (affineB < 0) return;
-                    setAffineB(affineB + 1);
-                  }}
-                >
-                  +
-                </p>
-              </div>
-              <strong>b</strong>
-            </div>
-          </div>
-
-          {!isFile ? (
-            <textarea
-              className="border border-gray-200 min-h-48 p-4 text-base rounded-lg"
-              placeholder="Enter your text here"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          ) : (
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg
-                    className="w-8 h-8 mb-4 text-gray-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 16"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                    />
-                  </svg>
-                  <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span className="font-semibold">Click to upload</span> or
-                    drag and drop
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    PDF
-                  </p>
-                </div>
-                <input
-                  id="dropzone-file"
-                  type="file"
-                  className="hidden"
-                  onChange={(event) => handleFileUpload(event, type)}
-                />
-              </label>
-            </div>
-          )}
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex items-center justify-center w-full">
-          <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-8 h-8 mb-4 text-gray-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 16"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                />
-              </svg>
-              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                <span className="font-semibold">Click to upload</span> or drag
-                and drop
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">PDF</p>
-            </div>
-            <input
-              id="dropzone-file"
-              type="file"
-              className="hidden"
-              onChange={(event) => handleFileUpload(event, type)}
-            />
-          </label>
-        </div>
-      );
-    }
-  };
-
-  const encryptText = () => {
-    if (type === "vigenere") {
-      return encryptVigenereCipher(text, key);
-    } else if (type === "extendedvigenere") {
-      return encryptExtendedVigenereCipher(text, key);
-    } else if (type === "autokey") {
-      return encryptAutoKeyVigenereCipher(text, key);
-    } else if (type === "affine") {
-      return encodeAffine(text, affineM, affineB);
-    } else if (type === "playfair") {
-      return "Playfair Cipher";
-    } else if (type === "product") {
-      return encryptProductCipher(text, key, column);
-    }
-  };
-
-  const decryptText = () => {
-    if (type === "vigenere") {
-      return decryptVigenereCipher(text, key);
-    } else if (type === "extendedvigenere") {
-      return decryptExtendedVigenereCipher(text, key);
-    } else if (type === "autokey") {
-      return decryptAutoKeyVigenereCipher(text, key);
-    } else if (type === "affine") {
-      return decodeAffine(text, affineM, affineB);
-    } else if (type === "playfair") {
-      return "Playfair Cipher";
-    } else if (type === "product") {
-      return decryptProductCipher(text, key, column);
     }
   };
 
@@ -404,7 +86,25 @@ function App() {
             <option value="product">Product Cipher</option>
           </select>
 
-          <div className="flex flex-col gap-4">{inputSection(type)}</div>
+          <div className="flex flex-col gap-4">
+            {inputSection(
+              type,
+              encrypt,
+              isFile,
+              text,
+              key,
+              column,
+              affineM,
+              affineB,
+              handleFileUpload,
+              setKey,
+              setColumn,
+              setText,
+              setAffineM,
+              setAffineB,
+              setIsFile
+            )}
+          </div>
         </div>
 
         <div className="bg-white p-8 w-96 flex flex-col gap-4 rounded-xl">
@@ -431,7 +131,11 @@ function App() {
 
           <textarea
             className="border border-gray-200 p-4 rounded-lg h-full"
-            value={encrypt ? encryptText() : decryptText()}
+            value={
+              encrypt
+                ? encryptText(type, text, key, affineM, affineB, column)
+                : decryptText(type, text, key, affineM, affineB, column)
+            }
             disabled
           />
 
