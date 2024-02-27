@@ -24,6 +24,7 @@ function App() {
   const [affineB, setAffineB] = useState(1);
   const [text, setText] = useState("");
   const [key, setKey] = useState("");
+  const [column, setColumn] = useState(0);
 
   const inputSection = (type: string) => {
     if (
@@ -50,6 +51,19 @@ function App() {
             value={key}
             onChange={(e) => setKey(e.target.value)}
           />
+
+          {type === "product" && (
+            <>
+              <strong>Column</strong>
+              <input
+                type="number"
+                className="border border-gray-200 p-4 text-base rounded-lg"
+                placeholder="Enter your k here"
+                value={column}
+                onChange={(e) => setColumn(parseInt(e.target.value))}
+              />
+            </>
+          )}
         </div>
       );
     } else if (type === "affine") {
@@ -174,7 +188,7 @@ function App() {
     } else if (type === "playfair") {
       return "Playfair Cipher";
     } else if (type === "product") {
-      return encryptProductCipher(text, key);
+      return encryptProductCipher(text, key, column);
     }
   };
 
@@ -190,7 +204,7 @@ function App() {
     } else if (type === "playfair") {
       return "Playfair Cipher";
     } else if (type === "product") {
-      return decryptProductCipher(text, key);
+      return decryptProductCipher(text, key, column);
     }
   };
 
@@ -198,17 +212,15 @@ function App() {
     <div className="bg-blue-200 flex flex-col gap-12 items-center justify-center min-h-screen">
       <div className="flex gap-4 text-4xl font-semibold">
         <div
-          className={`cursor-pointer ${
-            encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          className={`cursor-pointer ${encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
+            } p-4 rounded-lg`}
           onClick={() => setEncrypt(true)}
         >
           <h1 className="">Encryption</h1>
         </div>
         <div
-          className={`cursor-pointer ${
-            !encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          className={`cursor-pointer ${!encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
+            } p-4 rounded-lg`}
           onClick={() => setEncrypt(false)}
         >
           <h1>Decryption</h1>

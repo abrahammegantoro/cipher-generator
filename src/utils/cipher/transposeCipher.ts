@@ -1,6 +1,6 @@
 function encryptTransposeCipher(plainText: string, key: number): string {
   const numRows = Math.ceil(plainText.length / key);
-  let matrix: string[][] = [];
+  const matrix: string[][] = [];
 
   for (let i = 0; i < numRows; i++) {
     matrix.push([]);
@@ -17,7 +17,6 @@ function encryptTransposeCipher(plainText: string, key: number): string {
     }
   }
 
-  // Read the matrix column by column to generate ciphertext
   let cipherText = "";
   for (let i = 0; i < key; i++) {
     for (let j = 0; j < numRows; j++) {
