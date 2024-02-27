@@ -8,6 +8,10 @@ import {
   encryptExtendedVigenereCipher,
 } from "./cipher/extendedVigenereCipher";
 import {
+  decryptPlayfairCypher,
+  encryptPlayfairCipher,
+} from "./cipher/playfairCipher";
+import {
   decryptProductCipher,
   encryptProductCipher,
 } from "./cipher/productCipher";
@@ -33,7 +37,7 @@ const encryptText = (
   } else if (type === "affine") {
     return encodeAffine(text, affineM, affineB);
   } else if (type === "playfair") {
-    return "Playfair Cipher";
+    return encryptPlayfairCipher(text, key);
   } else if (type === "product") {
     return encryptProductCipher(text, key, column);
   }
@@ -56,7 +60,7 @@ const decryptText = (
   } else if (type === "affine") {
     return decodeAffine(text, affineM, affineB);
   } else if (type === "playfair") {
-    return "Playfair Cipher";
+    return decryptPlayfairCypher(text, key);
   } else if (type === "product") {
     return decryptProductCipher(text, key, column);
   }
