@@ -22,7 +22,7 @@ function App() {
   const isRelativelyPrime = (a: number, b: number) => {
     const gcd = (x: number, y: number) => {
       while (y) {
-        let t = y;
+        const t = y;
         y = x % y;
         x = t;
       }

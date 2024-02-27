@@ -40,7 +40,7 @@ const encryptText = (
   } else if (type === "affine") {
     return encodeAffine(text as string, affineM, affineB);
   } else if (type === "playfair") {
-    return encryptPlayfairCipher(text, key);
+    return encryptPlayfairCipher(text as string, key);
   } else if (type === "product") {
     return encryptProductCipher(text as string, key, column);
   }
@@ -64,7 +64,7 @@ const decryptText = (
   } else if (type === "affine") {
     return decodeAffine(text as string, affineM, affineB);
   } else if (type === "playfair") {
-    return decryptPlayfairCypher(text, key);
+    return decryptPlayfairCypher(text as string, key);
   } else if (type === "product") {
     return decryptProductCipher(text as string, key, column);
   }
