@@ -26,6 +26,24 @@ function App() {
   const [key, setKey] = useState("");
   const [column, setColumn] = useState(0);
   const [isFile, setIsFile] = useState(false);
+  const [errorAffine, setErrorAffine] = useState(false);
+
+  const setM = (value: number) => {
+    setAffineM(value);
+    isRelativelyPrime(value, 26) ? setErrorAffine(false) : setErrorAffine(true);
+  };
+
+  const isRelativelyPrime = (a: number, b: number) => {
+    const gcd = (x: number, y: number) => {
+      while (y) {
+        let t = y;
+        y = x % y;
+        x = t;
+      }
+      return x;
+    };
+    return gcd(a, b) === 1;
+  };
 
   const inputSection = (type: string) => {
     if (
@@ -155,7 +173,7 @@ function App() {
                   className="cursor-pointer"
                   onClick={() => {
                     if (affineM <= 1) return;
-                    setAffineM(affineM - 1);
+                    setM(affineM - 1);
                   }}
                 >
                   -
@@ -165,13 +183,13 @@ function App() {
                   className="border text-center border-gray-200 p-1 w-20 text-base rounded-lg"
                   placeholder=""
                   value={affineM}
-                  onChange={(e) => setAffineM(parseInt(e.target.value))}
+                  onChange={(e) => setM(parseInt(e.target.value))}
                 />
                 <p
                   className="cursor-pointer"
                   onClick={() => {
                     if (affineM < 0) return;
-                    setAffineM(affineM + 1);
+                    setM(affineM + 1);
                   }}
                 >
                   +
@@ -318,13 +336,25 @@ function App() {
     }
   };
 
+  const handleDownload = () => {
+    const result = (encrypt ? encryptText() : decryptText()) ?? "";
+    const element = document.createElement("a");
+    const file = new Blob([result], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = encrypt ? "ciphertext.txt" : "plaintext.txt";
+    document.body.appendChild(element); // Required for this to work in Firefox
+    element.click();
+  };
+
   return (
     <div className="bg-blue-200 flex flex-col gap-12 p-14 items-center justify-center min-h-screen">
       <div className="flex gap-4 text-4xl font-semibold">
         <div
           className={`cursor-pointer ${
             encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          } p-4 rounded-lg transition
+          duration-300
+          ease-in-out`}
           onClick={() => setEncrypt(true)}
         >
           <h1 className="">Encryption</h1>
@@ -332,7 +362,9 @@ function App() {
         <div
           className={`cursor-pointer ${
             !encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-          } p-4 rounded-lg`}
+          } p-4 rounded-lg transition
+          duration-300
+          ease-in-out`}
           onClick={() => setEncrypt(false)}
         >
           <h1>Decryption</h1>
@@ -365,9 +397,22 @@ function App() {
 
           <textarea
             className="border border-gray-200 p-4 rounded-lg h-full"
-            value={encrypt ? encryptText() : decryptText()}
+            value={
+              errorAffine
+                ? "m must be relatively prime with 26"
+                : encrypt
+                ? encryptText()
+                : decryptText()
+            }
             disabled
           />
+
+          <button
+            className="bg-blue-500 text-white rounded-lg p-4 hover:bg-blue-700 transition duration-300 ease-in-out font-semibold cursor-pointer"
+            onClick={handleDownload}
+          >
+            Download
+          </button>
         </div>
       </div>
     </div>
