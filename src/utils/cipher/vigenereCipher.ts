@@ -1,11 +1,24 @@
+import { removeNonAplhabet, isUpperCase } from "../string";
+
 function encryptVigenereCipher(message: string, key: string) {
+  message = removeNonAplhabet(message);
+  
   let result = "";
   for (let i = 0; i < message.length; i++) {
     const charCode = message.charCodeAt(i);
     const keyChar = key.charCodeAt(i % key.length);
 
-    const encryptedChar = (charCode + keyChar - 2 * 97) % 26 + 97;
-    result += String.fromCharCode(encryptedChar);
+    console.log(keyChar)
+
+    if (isUpperCase(message[i]) && isUpperCase(key[i % key.length])) {
+      result += String.fromCharCode(((charCode - 65 + keyChar - 65) % 26) + 65);
+    } else if (!isUpperCase(message[i]) && !isUpperCase(key[i % key.length])) {
+      result += String.fromCharCode(((charCode - 97 + keyChar - 97) % 26) + 97);
+    } else if (isUpperCase(message[i]) && !isUpperCase(key[i % key.length])) {
+      result += String.fromCharCode(((charCode - 65 + keyChar - 97) % 26) + 65);
+    } else {
+      result += String.fromCharCode(((charCode - 97 + keyChar - 65) % 26) + 97);
+    }
   }
   return result;
 }
@@ -15,9 +28,16 @@ function decryptVigenereCipher(message: string, key: string) {
   for (let i = 0; i < message.length; i++) {
     const charCode = message.charCodeAt(i);
     const keyChar = key.charCodeAt(i % key.length);
-    
-    const decryptedChar = (26 + charCode - keyChar) % 26 + 97;
-    result += String.fromCharCode(decryptedChar);
+
+    if (isUpperCase(message[i]) && isUpperCase(key[i % key.length])) {
+      result += String.fromCharCode(((26 + charCode - keyChar) % 26) + 65);
+    } else if (!isUpperCase(message[i]) && !isUpperCase(key[i % key.length])) {
+      result += String.fromCharCode(((26 + charCode - keyChar) % 26) + 97);
+    } else if (isUpperCase(message[i]) && !isUpperCase(key[i % key.length])) {
+      result += String.fromCharCode(((26 + charCode - keyChar + 32) % 26) + 65);
+    } else {
+      result += String.fromCharCode(((26 + charCode - keyChar - 32) % 26) + 97);
+    }
   }
   return result;
 }

@@ -6,6 +6,14 @@ function removeChar(input: string, char: string) {
   return input.split("").filter((item) => item !== char).join("");
 }
 
+function isUpperCase(char: string | undefined) {
+  return char && char === char.toUpperCase();
+}
+
+function isLowerCase(char: string) {
+  return char === char.toLowerCase();
+}
+
 function removeDuplicates(input: string) {
   return input
     .split("")
@@ -51,4 +59,4 @@ function bigram(input: string) {
   return result;
 }
 
-export { removeNonAplhabet, removeChar, removeDuplicates, replaceChar, bigram };
+export { removeNonAplhabet, removeChar, removeDuplicates, replaceChar, bigram, isUpperCase, isLowerCase};

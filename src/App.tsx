@@ -124,6 +124,30 @@ function App() {
     } else if (type === "affine") {
       return (
         <div className="flex flex-col gap-4">
+          <div className="flex gap-2 justify-around">
+            <strong
+              className={`cursor-pointer ${
+                !isFile ? "text-blue-200" : "text-black"
+              }`}
+              onClick={() => {
+                setIsFile(false);
+              }}
+            >
+              {encrypt ? "Plain Text" : "Ciphertext"}
+            </strong>
+            <p>or</p>
+            <strong
+              className={`cursor-pointer ${
+                isFile ? "text-blue-200" : "text-black"
+              }`}
+              onClick={() => {
+                setIsFile(true);
+              }}
+            >
+              File
+            </strong>
+          </div>
+
           <div className="flex justify-around">
             <div className="flex flex-col items-center">
               <div className="flex gap-2 items-center">
@@ -188,30 +212,7 @@ function App() {
               <strong>b</strong>
             </div>
           </div>
-
-          <div className="flex gap-2 justify-around">
-            <strong
-              className={`cursor-pointer ${
-                !isFile ? "text-blue-200" : "text-black"
-              }`}
-              onClick={() => {
-                setIsFile(false);
-              }}
-            >
-              {encrypt ? "Plain Text" : "Ciphertext"}
-            </strong>
-            <p>or</p>
-            <strong
-              className={`cursor-pointer ${
-                isFile ? "text-blue-200" : "text-black"
-              }`}
-              onClick={() => {
-                setIsFile(true);
-              }}
-            >
-              File
-            </strong>
-          </div>
+          
           {!isFile ? (
             <textarea
               className="border border-gray-200 min-h-48 p-4 text-base rounded-lg"

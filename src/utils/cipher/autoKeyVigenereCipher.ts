@@ -1,6 +1,8 @@
+import { removeNonAplhabet } from "../string";
 import { encryptVigenereCipher } from "./vigenereCipher";
 
 function encryptAutoKeyVigenereCipher(message: string, key: string) {
+  message = removeNonAplhabet(message);
   if (key.length < message.length) {
     let j = 0;
     for (let i = key.length; i < message.length; i++) {
