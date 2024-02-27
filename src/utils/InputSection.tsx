@@ -11,10 +11,10 @@ const inputSection = (
     event: React.ChangeEvent<HTMLInputElement>,
     type: string
   ) => void,
+  setM: (value: number) => void,
   setKey: (key: string) => void,
   setColumn: (column: number) => void,
   setText: (text: string) => void,
-  setAffineM: (affineM: number) => void,
   setAffineB: (affineB: number) => void,
   setIsFile: (isFile: boolean) => void
 ) => {
@@ -30,7 +30,7 @@ const inputSection = (
         <div className="flex gap-2 justify-around">
           <strong
             className={`cursor-pointer ${
-              !isFile ? "text-blue-200" : "text-black"
+              !isFile ? "text-blue-400" : "text-black"
             }`}
             onClick={() => {
               setIsFile(false);
@@ -41,7 +41,7 @@ const inputSection = (
           <p>or</p>
           <strong
             className={`cursor-pointer ${
-              isFile ? "text-blue-200" : "text-black"
+              isFile ? "text-blue-400" : "text-black"
             }`}
             onClick={() => {
               setIsFile(true);
@@ -120,7 +120,7 @@ const inputSection = (
         <div className="flex gap-2 justify-around">
           <strong
             className={`cursor-pointer ${
-              !isFile ? "text-blue-200" : "text-black"
+              !isFile ? "text-blue-400" : "text-black"
             }`}
             onClick={() => {
               setIsFile(false);
@@ -131,7 +131,7 @@ const inputSection = (
           <p>or</p>
           <strong
             className={`cursor-pointer ${
-              isFile ? "text-blue-200" : "text-black"
+              isFile ? "text-blue-400" : "text-black"
             }`}
             onClick={() => {
               setIsFile(true);
@@ -148,7 +148,7 @@ const inputSection = (
                 className="cursor-pointer"
                 onClick={() => {
                   if (affineM <= 1) return;
-                  setAffineM(affineM - 1);
+                  setM(affineM - 1);
                 }}
               >
                 -
@@ -158,20 +158,20 @@ const inputSection = (
                 className="border text-center border-gray-200 p-1 w-20 text-base rounded-lg"
                 placeholder=""
                 value={affineM}
-                onChange={(e) => setAffineM(parseInt(e.target.value))}
+                onChange={(e) => setM(parseInt(e.target.value))}
               />
               <p
                 className="cursor-pointer"
                 onClick={() => {
                   if (affineM < 0) return;
-                  setAffineM(affineM + 1);
+                  setM(affineM + 1);
                 }}
               >
                 +
               </p>
             </div>
 
-            <strong>m</strong>
+            <strong>m/slope</strong>
           </div>
 
           <div className="flex flex-col items-center">
@@ -236,7 +236,6 @@ const inputSection = (
                   <span className="font-semibold">Click to upload</span> or drag
                   and drop
                 </p>
-                <p className="text-xs text-gray-500">PDF</p>
               </div>
               <input
                 id="dropzone-file"
