@@ -9,8 +9,26 @@ function App() {
   const [affineB, setAffineB] = useState(1);
   const [text, setText] = useState("");
   const [key, setKey] = useState("");
-  const [column, setColumn] = useState(0);
+  const [column, setColumn] = useState(1);
   const [isFile, setIsFile] = useState(false);
+  const [errorAffine, setErrorAffine] = useState(false);
+
+  const setM = (value: number) => {
+    setAffineM(value);
+    isRelativelyPrime(value, 26) ? setErrorAffine(false) : setErrorAffine(true);
+  };
+
+  const isRelativelyPrime = (a: number, b: number) => {
+    const gcd = (x: number, y: number) => {
+      while (y) {
+        let t = y;
+        y = x % y;
+        x = t;
+      }
+      return x;
+    };
+    return gcd(a, b) === 1;
+  };
 
   const handleDownload = () => {
     const content =
@@ -97,10 +115,10 @@ function App() {
               affineM,
               affineB,
               handleFileUpload,
+              setM,
               setKey,
               setColumn,
               setText,
-              setAffineM,
               setAffineB,
               setIsFile
             )}
@@ -132,7 +150,9 @@ function App() {
           <textarea
             className="border border-gray-200 p-4 rounded-lg h-full"
             value={
-              encrypt
+              errorAffine
+                ? "m must be relatively prime with 26"
+                : encrypt
                 ? encryptText(type, text, key, affineM, affineB, column)
                 : decryptText(type, text, key, affineM, affineB, column)
             }
