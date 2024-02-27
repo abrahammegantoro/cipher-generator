@@ -70,6 +70,15 @@ function bigram(input: string) {
   return result;
 }
 
+function uint8ArrayToAscii (uint8Array: Uint8Array) {
+  let result = "";
+  for (let i = 0; i < uint8Array.length; i++) {
+    result += String.fromCharCode(uint8Array[i]);
+  }
+
+  return result;
+}
+
 export {
   removeNonAplhabet,
   removeNonAlphabetExceptSpace,
@@ -80,4 +89,5 @@ export {
   isUpperCase,
   isLowerCase,
   isAlphabetic,
+  uint8ArrayToAscii
 };

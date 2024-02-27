@@ -1,27 +1,34 @@
 import { useState } from "react";
 import inputSection from "./utils/InputSection";
 import { decryptText, encryptText } from "./utils/runnerCipher";
+// import { uint8ArrayToAscii } from "./utils/string";
 
 function App() {
   const [encrypt, setEncrypt] = useState(true);
   const [type, setType] = useState("vigenere");
   const [affineM, setAffineM] = useState(1);
   const [affineB, setAffineB] = useState(1);
-  const [text, setText] = useState("");
+  const [text, setText] = useState<(string | Uint8Array)>("");
   const [key, setKey] = useState("");
   const [column, setColumn] = useState(0);
   const [isFile, setIsFile] = useState(false);
+  const [fileDetail, setFileDetail] = useState({
+    name: "",
+    type: "",
+  });
 
   const handleDownload = () => {
     const content =
       (encrypt
         ? encryptText(type, text, key, affineM, affineB, column)
         : decryptText(type, text, key, affineM, affineB, column)) ?? "";
+    
+    
     const element = document.createElement("a");
-    const file = new Blob([content], { type: "text/plain" });
+    const file = new Blob([content], { type: fileDetail.type });
     element.href = URL.createObjectURL(file);
-    element.download = "text.txt";
-    document.body.appendChild(element); // Required for this to work in Firefox
+    element.download = fileDetail.name;
+    document.body.appendChild(element);
     element.click();
   };
 
@@ -40,14 +47,23 @@ function App() {
         } else {
           if (type === "extendedvigenere") {
             const byteArray = new Uint8Array(content as ArrayBuffer);
-            setText(byteArray.join(" "));
+            setText(byteArray);
           } else {
             setText(content as string);
           }
         }
       };
 
-      reader.readAsText(file);
+      setFileDetail({
+        name: file.name,
+        type: file.type,
+      });
+
+      if (type === "extendedvigenere") {
+        reader.readAsArrayBuffer(file);
+      } else {
+        reader.readAsText(file);
+      }
     }
   };
 
@@ -118,7 +134,7 @@ function App() {
 
               <textarea
                 className="border border-gray-200 p-4 rounded-lg h-full"
-                value={text}
+                value={text instanceof Uint8Array ? new TextDecoder().decode(text) : text}
                 disabled
               />
             </>
@@ -133,8 +149,8 @@ function App() {
             className="border border-gray-200 p-4 rounded-lg h-full"
             value={
               encrypt
-                ? encryptText(type, text, key, affineM, affineB, column)
-                : decryptText(type, text, key, affineM, affineB, column)
+                ? encryptText(type, text, key, affineM, affineB, column)?.toString()
+                : decryptText(type, text, key, affineM, affineB, column)?.toString()
             }
             disabled
           />

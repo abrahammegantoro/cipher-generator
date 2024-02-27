@@ -4,8 +4,10 @@ import {
   encryptAutoKeyVigenereCipher,
 } from "./cipher/autoKeyVigenereCipher";
 import {
-  decryptExtendedVigenereCipher,
-  encryptExtendedVigenereCipher,
+  // decryptExtendedVigenereCipher,
+  decryptExtendedVigenerecipherUint8Array,
+  // encryptExtendedVigenereCipher,
+  encryptExtendedVigenerecipherUint8Array,
 } from "./cipher/extendedVigenereCipher";
 import {
   decryptProductCipher,
@@ -18,47 +20,49 @@ import {
 
 const encryptText = (
   type: string,
-  text: string,
+  text: string | Uint8Array,
   key: string,
   affineM: number,
   affineB: number,
   column: number
 ) => {
   if (type === "vigenere") {
-    return encryptVigenereCipher(text, key);
+    return encryptVigenereCipher(text as string, key);
   } else if (type === "extendedvigenere") {
-    return encryptExtendedVigenereCipher(text, key);
+    // return encryptExtendedVigenereCipher(text, key);
+    return encryptExtendedVigenerecipherUint8Array(text as Uint8Array, key);
   } else if (type === "autokey") {
-    return encryptAutoKeyVigenereCipher(text, key);
+    return encryptAutoKeyVigenereCipher(text as string, key);
   } else if (type === "affine") {
-    return encodeAffine(text, affineM, affineB);
+    return encodeAffine(text as string, affineM, affineB);
   } else if (type === "playfair") {
     return "Playfair Cipher";
   } else if (type === "product") {
-    return encryptProductCipher(text, key, column);
+    return encryptProductCipher(text as string, key, column);
   }
 };
 
 const decryptText = (
   type: string,
-  text: string,
+  text: string | Uint8Array,
   key: string,
   affineM: number,
   affineB: number,
   column: number
 ) => {
   if (type === "vigenere") {
-    return decryptVigenereCipher(text, key);
+    return decryptVigenereCipher(text as string, key);
   } else if (type === "extendedvigenere") {
-    return decryptExtendedVigenereCipher(text, key);
+    // return decryptExtendedVigenereCipher(text, key);
+    return decryptExtendedVigenerecipherUint8Array(text as Uint8Array, key);
   } else if (type === "autokey") {
-    return decryptAutoKeyVigenereCipher(text, key);
+    return decryptAutoKeyVigenereCipher(text as string, key);
   } else if (type === "affine") {
-    return decodeAffine(text, affineM, affineB);
+    return decodeAffine(text as string, affineM, affineB);
   } else if (type === "playfair") {
     return "Playfair Cipher";
   } else if (type === "product") {
-    return decryptProductCipher(text, key, column);
+    return decryptProductCipher(text as string, key, column);
   }
 };
 
