@@ -8,7 +8,7 @@ function App() {
   const [type, setType] = useState("vigenere");
   const [affineM, setAffineM] = useState(1);
   const [affineB, setAffineB] = useState(1);
-  const [text, setText] = useState<(string | Uint8Array)>("");
+  const [text, setText] = useState<string | Uint8Array>("");
   const [key, setKey] = useState("");
   const [column, setColumn] = useState(1);
   const [isFile, setIsFile] = useState(false);
@@ -42,12 +42,38 @@ function App() {
         : decryptText(type, text, key, affineM, affineB, column)) ?? "";
 
     const element = document.createElement("a");
-    const file = new Blob([content], { type: fileDetail.type ? fileDetail.type : "text/plain" });
+    const file = new Blob([content], {
+      type: fileDetail.type ? fileDetail.type : "text/plain",
+    });
     element.href = URL.createObjectURL(file);
-    element.download = encrypt ? "encrypted-" + (fileDetail.name ? fileDetail.name : new Date().getTime()) : "decrypted-" + (fileDetail.name ? fileDetail.name : new Date().getTime());
+    element.download = encrypt
+      ? "encrypted-" +
+        (fileDetail.name ? fileDetail.name : new Date().getTime())
+      : "decrypted-" +
+        (fileDetail.name ? fileDetail.name : new Date().getTime());
     document.body.appendChild(element);
     element.click();
   };
+
+  const handleDownloadBase64 = () => {
+    const content =
+      (encrypt
+        ? encryptText(type, text, key, affineM, affineB, column)
+        : decryptText(type, text, key, affineM, affineB, column)) ?? "";
+
+    const element = document.createElement("a");
+    const file = new Blob([btoa(content?.toString() as string)], {
+      type: fileDetail.type ? fileDetail.type : "text/plain",
+    });
+    element.href = URL.createObjectURL(file);
+    element.download = encrypt
+      ? "encrypted-" +
+        (fileDetail.name ? fileDetail.name : new Date().getTime())
+      : "decrypted-" +
+        (fileDetail.name ? fileDetail.name : new Date().getTime());
+    document.body.appendChild(element);
+    element.click();
+  }
 
   const handleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -89,15 +115,17 @@ function App() {
     <div className="bg-blue-200 flex flex-col gap-12 p-14 items-center justify-center min-h-screen">
       <div className="flex gap-4 text-4xl font-semibold">
         <div
-          className={`cursor-pointer ${encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-            } p-4 rounded-lg`}
+          className={`cursor-pointer ${
+            encrypt ? "bg-white text-blue-400" : "bg-transparent text-white"
+          } p-4 rounded-lg`}
           onClick={() => setEncrypt(true)}
         >
           <h1 className="">Encryption</h1>
         </div>
         <div
-          className={`cursor-pointer ${!encrypt ? "bg-white text-blue-200" : "bg-transparent text-white"
-            } p-4 rounded-lg`}
+          className={`cursor-pointer ${
+            !encrypt ? "bg-white text-blue-400" : "bg-transparent text-white"
+          } p-4 rounded-lg`}
           onClick={() => setEncrypt(false)}
         >
           <h1>Decryption</h1>
@@ -150,7 +178,11 @@ function App() {
 
               <textarea
                 className="border border-gray-200 p-4 rounded-lg h-full"
-                value={text instanceof Uint8Array ? new TextDecoder().decode(text) : text}
+                value={
+                  text instanceof Uint8Array
+                    ? new TextDecoder().decode(text)
+                    : text
+                }
                 disabled
               />
             </>
@@ -167,12 +199,58 @@ function App() {
               errorAffine
                 ? "m must be relatively prime with 26"
                 : encrypt
-                  ? encryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
-                    ? uint8ArrayToString(encryptText(type, text, key, affineM, affineB, column) as Uint8Array)
-                    : encryptText(type, text, key, affineM, affineB, column)?.toString() as string
-                  : decryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
-                    ? uint8ArrayToString(decryptText(type, text, key, affineM, affineB, column) as Uint8Array)
-                    : decryptText(type, text, key, affineM, affineB, column)?.toString() as string
+                ? encryptText(
+                    type,
+                    text,
+                    key,
+                    affineM,
+                    affineB,
+                    column
+                  ) instanceof Uint8Array
+                  ? uint8ArrayToString(
+                      encryptText(
+                        type,
+                        text,
+                        key,
+                        affineM,
+                        affineB,
+                        column
+                      ) as Uint8Array
+                    )
+                  : (encryptText(
+                      type,
+                      text,
+                      key,
+                      affineM,
+                      affineB,
+                      column
+                    )?.toString() as string)
+                : decryptText(
+                    type,
+                    text,
+                    key,
+                    affineM,
+                    affineB,
+                    column
+                  ) instanceof Uint8Array
+                ? uint8ArrayToString(
+                    decryptText(
+                      type,
+                      text,
+                      key,
+                      affineM,
+                      affineB,
+                      column
+                    ) as Uint8Array
+                  )
+                : (decryptText(
+                    type,
+                    text,
+                    key,
+                    affineM,
+                    affineB,
+                    column
+                  )?.toString() as string)
             }
             disabled
           />
@@ -186,28 +264,105 @@ function App() {
         </div>
 
         <div className="bg-white p-8 w-96 flex flex-col gap-4 rounded-xl">
-            <div className="">
-              <strong className="text-center">
-                {encrypt ? "Ciphertext base64" : "Plain Text base64"}
-              </strong>
-            </div>
-
-            <textarea
-              className="border border-gray-200 p-4 rounded-lg h-full"
-              value={
-                errorAffine
-                  ? "m must be relatively prime with 26"
-                  : encrypt
-                    ? encryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
-                      ? btoa(unescape(encodeURIComponent(uint8ArrayToString(encryptText(type, text, key, affineM, affineB, column) as Uint8Array))))
-                      : btoa(unescape(encodeURIComponent(encryptText(type, text, key, affineM, affineB, column)?.toString() as string)))
-                    : decryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
-                      ? btoa(unescape(encodeURIComponent(uint8ArrayToString(decryptText(type, text, key, affineM, affineB, column) as Uint8Array))))
-                      : btoa(unescape(encodeURIComponent(decryptText(type, text, key, affineM, affineB, column)?.toString() as string)))
-              }
-              disabled
-            />
+          <div className="">
+            <strong className="text-center">
+              {encrypt ? "Ciphertext base64" : "Plain Text base64"}
+            </strong>
           </div>
+
+          <textarea
+            className="border border-gray-200 p-4 rounded-lg h-full"
+            value={
+              errorAffine
+                ? "m must be relatively prime with 26"
+                : encrypt
+                ? encryptText(
+                    type,
+                    text,
+                    key,
+                    affineM,
+                    affineB,
+                    column
+                  ) instanceof Uint8Array
+                  ? btoa(
+                      unescape(
+                        encodeURIComponent(
+                          uint8ArrayToString(
+                            encryptText(
+                              type,
+                              text,
+                              key,
+                              affineM,
+                              affineB,
+                              column
+                            ) as Uint8Array
+                          )
+                        )
+                      )
+                    )
+                  : btoa(
+                      unescape(
+                        encodeURIComponent(
+                          encryptText(
+                            type,
+                            text,
+                            key,
+                            affineM,
+                            affineB,
+                            column
+                          )?.toString() as string
+                        )
+                      )
+                    )
+                : decryptText(
+                    type,
+                    text,
+                    key,
+                    affineM,
+                    affineB,
+                    column
+                  ) instanceof Uint8Array
+                ? btoa(
+                    unescape(
+                      encodeURIComponent(
+                        uint8ArrayToString(
+                          decryptText(
+                            type,
+                            text,
+                            key,
+                            affineM,
+                            affineB,
+                            column
+                          ) as Uint8Array
+                        )
+                      )
+                    )
+                  )
+                : btoa(
+                    unescape(
+                      encodeURIComponent(
+                        decryptText(
+                          type,
+                          text,
+                          key,
+                          affineM,
+                          affineB,
+                          column
+                        )?.toString() as string
+                      )
+                    )
+                  )
+            }
+            disabled
+          />
+
+          <button
+            className="bg-blue-400 hover:bg-blue-500 transition ease-in-out duration-200 p-4 text-white font-semibold rounded-lg"
+            onClick={handleDownloadBase64}
+          >
+            Download
+          </button>
+        </div>
       </div>
     </div>
   );
