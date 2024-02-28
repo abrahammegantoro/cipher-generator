@@ -12,7 +12,8 @@ function encryptTransposeCipher(plainText: string, key: number): string {
       if (index < plainText.length) {
         matrix[i][j] = plainText[index++];
       } else {
-        matrix[i][j] = " ";
+        const asciiValue = ((index - plainText.length) % 26) + 97;
+        matrix[i][j] = String.fromCharCode(asciiValue);
       }
     }
   }
