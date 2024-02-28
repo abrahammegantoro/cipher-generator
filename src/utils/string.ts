@@ -1,5 +1,10 @@
-function removeNonAplhabet(input: string) {
-  return input.replace(/[^a-zA-Z]/g, "");
+function removeNonAplhabet(input: string | Uint8Array) {
+  if (typeof input === "string") {
+    return input.replace(/[^a-zA-Z]/g, "");
+  } else {
+    input = uint8ArrayToString(input);
+    return input.replace(/[^a-zA-Z]/g, "");
+  }
 }
 
 function removeNonAlphabetExceptSpace(input: string) {
