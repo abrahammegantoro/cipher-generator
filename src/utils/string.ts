@@ -49,7 +49,11 @@ function bigram(input: string) {
       temp += input.charAt(position);
     } else if (temp.length == 1) {
       if (temp.charAt(0) == input.charAt(position)) {
-        temp += "x";
+        if (temp.charAt(0) === "x") {
+          temp += "z";
+        } else {
+          temp += "x";
+        }
         result.push(temp);
         temp = "";
         position--;
@@ -63,14 +67,18 @@ function bigram(input: string) {
   }
 
   if (temp.length == 1) {
-    temp += "x";
+    if (temp.charAt(0) === "x") {
+      temp += "z";
+    } else {
+      temp += "x";
+    }
     result.push(temp);
   }
 
   return result;
 }
 
-function uint8ArrayToAscii (uint8Array: Uint8Array) {
+function uint8ArrayToAscii(uint8Array: Uint8Array) {
   let result = "";
   for (let i = 0; i < uint8Array.length; i++) {
     result += String.fromCharCode(uint8Array[i]);
@@ -80,11 +88,11 @@ function uint8ArrayToAscii (uint8Array: Uint8Array) {
 }
 
 function uint8ArrayToString(uint8Array: Uint8Array): string {
-  if (typeof TextDecoder !== 'undefined') {
+  if (typeof TextDecoder !== "undefined") {
     return new TextDecoder().decode(uint8Array);
   }
-  
-  let result = '';
+
+  let result = "";
   for (let i = 0; i < uint8Array.length; i++) {
     result += String.fromCharCode(uint8Array[i]);
   }
@@ -92,7 +100,7 @@ function uint8ArrayToString(uint8Array: Uint8Array): string {
 }
 
 function convertArrayToAscii(cipheredArray: Uint8Array): string {
-  let asciiString = '';
+  let asciiString = "";
   for (let i = 0; i < cipheredArray.length; i++) {
     asciiString += String.fromCharCode(cipheredArray[i]);
   }
@@ -111,5 +119,5 @@ export {
   isAlphabetic,
   uint8ArrayToAscii,
   uint8ArrayToString,
-  convertArrayToAscii
+  convertArrayToAscii,
 };

@@ -60,7 +60,7 @@ function encryptPlayfairCipher(message: string, key: string) {
 
 function decryptPlayfairCypher(message: string, key: string) {
   if (key.length === 0) return message;
-  
+
   key = generateKeySquare(key);
   const finalMessage = bigram(message);
   let result = "";
