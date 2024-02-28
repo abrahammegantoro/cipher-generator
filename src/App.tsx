@@ -199,11 +199,11 @@ function App() {
                   ? "m must be relatively prime with 26"
                   : encrypt
                     ? encryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
-                      ? btoa(uint8ArrayToString(encryptText(type, text, key, affineM, affineB, column) as Uint8Array))
-                      : btoa(encryptText(type, text, key, affineM, affineB, column)?.toString() as string)
+                      ? btoa(unescape(encodeURIComponent(uint8ArrayToString(encryptText(type, text, key, affineM, affineB, column) as Uint8Array))))
+                      : btoa(unescape(encodeURIComponent(encryptText(type, text, key, affineM, affineB, column)?.toString() as string)))
                     : decryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
-                      ? btoa(uint8ArrayToString(decryptText(type, text, key, affineM, affineB, column) as Uint8Array))
-                      : btoa(decryptText(type, text, key, affineM, affineB, column)?.toString() as string)
+                      ? btoa(unescape(encodeURIComponent(uint8ArrayToString(decryptText(type, text, key, affineM, affineB, column) as Uint8Array))))
+                      : btoa(unescape(encodeURIComponent(decryptText(type, text, key, affineM, affineB, column)?.toString() as string)))
               }
               disabled
             />
