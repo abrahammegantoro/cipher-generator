@@ -2,8 +2,6 @@
 
 ## Tugas Kecil 1 - II4031 Kriptografi dan Koding
 
-Foobar is a Python library for dealing with word pluralization.
-
 ## Daftar Cipher
 
 1. Vigenere Cipher
