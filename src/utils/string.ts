@@ -79,6 +79,18 @@ function uint8ArrayToAscii (uint8Array: Uint8Array) {
   return result;
 }
 
+function uint8ArrayToString(uint8Array: Uint8Array): string {
+  if (typeof TextDecoder !== 'undefined') {
+    return new TextDecoder().decode(uint8Array);
+  }
+  
+  let result = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    result += String.fromCharCode(uint8Array[i]);
+  }
+  return result;
+}
+
 function convertArrayToAscii(cipheredArray: Uint8Array): string {
   let asciiString = '';
   for (let i = 0; i < cipheredArray.length; i++) {
@@ -98,5 +110,6 @@ export {
   isLowerCase,
   isAlphabetic,
   uint8ArrayToAscii,
+  uint8ArrayToString,
   convertArrayToAscii
 };

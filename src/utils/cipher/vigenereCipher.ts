@@ -2,6 +2,8 @@ import { removeNonAplhabet, isUpperCase } from "../string";
 
 function encryptVigenereCipher(message: string, key: string) {
   message = removeNonAplhabet(message);
+  if (key.length === 0) return message;
+  
   key = removeNonAplhabet(key);
   
   let result = "";

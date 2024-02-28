@@ -1,6 +1,7 @@
 import { useState } from "react";
 import inputSection from "./utils/InputSection";
 import { decryptText, encryptText } from "./utils/runnerCipher";
+import { uint8ArrayToString } from "./utils/string";
 
 function App() {
   const [encrypt, setEncrypt] = useState(true);
@@ -12,6 +13,10 @@ function App() {
   const [column, setColumn] = useState(1);
   const [isFile, setIsFile] = useState(false);
   const [errorAffine, setErrorAffine] = useState(false);
+  const [fileDetail, setFileDetail] = useState({
+    name: "",
+    type: "",
+  });
 
   const setM = (value: number) => {
     setAffineM(value);
@@ -29,10 +34,6 @@ function App() {
     };
     return gcd(a, b) === 1;
   };
-  const [fileDetail, setFileDetail] = useState({
-    name: "",
-    type: "",
-  });
 
   const handleDownload = () => {
     const content =
@@ -41,9 +42,9 @@ function App() {
         : decryptText(type, text, key, affineM, affineB, column)) ?? "";
 
     const element = document.createElement("a");
-    const file = new Blob([content], { type: fileDetail.type });
+    const file = new Blob([content], { type: fileDetail.type ? fileDetail.type : "text/plain" });
     element.href = URL.createObjectURL(file);
-    element.download = fileDetail.name;
+    element.download = encrypt ? "encrypted-" + (fileDetail.name ? fileDetail.name : new Date().getTime()) : "decrypted-" + (fileDetail.name ? fileDetail.name : new Date().getTime());
     document.body.appendChild(element);
     element.click();
   };
@@ -58,6 +59,7 @@ function App() {
 
       reader.onload = function () {
         const content = reader.result;
+
         if (file.type === "text/plain") {
           setText(content as string);
         } else {
@@ -165,8 +167,12 @@ function App() {
               errorAffine
                 ? "m must be relatively prime with 26"
                 : encrypt
-                  ? encryptText(type, text, key, affineM, affineB, column)?.toString()
-                  : decryptText(type, text, key, affineM, affineB, column)?.toString()
+                  ? encryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
+                    ? uint8ArrayToString(encryptText(type, text, key, affineM, affineB, column) as Uint8Array)
+                    : encryptText(type, text, key, affineM, affineB, column)?.toString() as string
+                  : decryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
+                    ? uint8ArrayToString(decryptText(type, text, key, affineM, affineB, column) as Uint8Array)
+                    : decryptText(type, text, key, affineM, affineB, column)?.toString() as string
             }
             disabled
           />
@@ -178,6 +184,30 @@ function App() {
             Download
           </button>
         </div>
+
+        <div className="bg-white p-8 w-96 flex flex-col gap-4 rounded-xl">
+            <div className="">
+              <strong className="text-center">
+                {encrypt ? "Ciphertext base64" : "Plain Text base64"}
+              </strong>
+            </div>
+
+            <textarea
+              className="border border-gray-200 p-4 rounded-lg h-full"
+              value={
+                errorAffine
+                  ? "m must be relatively prime with 26"
+                  : encrypt
+                    ? encryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
+                      ? btoa(uint8ArrayToString(encryptText(type, text, key, affineM, affineB, column) as Uint8Array))
+                      : btoa(encryptText(type, text, key, affineM, affineB, column)?.toString() as string)
+                    : decryptText(type, text, key, affineM, affineB, column) instanceof Uint8Array
+                      ? btoa(uint8ArrayToString(decryptText(type, text, key, affineM, affineB, column) as Uint8Array))
+                      : btoa(decryptText(type, text, key, affineM, affineB, column)?.toString() as string)
+              }
+              disabled
+            />
+          </div>
       </div>
     </div>
   );

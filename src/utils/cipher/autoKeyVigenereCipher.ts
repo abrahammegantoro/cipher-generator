@@ -3,6 +3,8 @@ import { encryptVigenereCipher } from "./vigenereCipher";
 
 function encryptAutoKeyVigenereCipher(message: string, key: string) {
   message = removeNonAplhabet(message);
+  if (key.length === 0) return message;
+
   key = removeNonAplhabet(key);
   
   if (key.length < message.length) {
@@ -19,6 +21,8 @@ function encryptAutoKeyVigenereCipher(message: string, key: string) {
 
 function decryptAutoKeyVigenereCipher(message: string, key: string) {
   let result = "";
+  if (key.length === 0) return message;
+  
   for (let i = 0; i < message.length; i++) {
     const charCode = message.charCodeAt(i);
     const keyChar = key.charCodeAt(i % key.length);

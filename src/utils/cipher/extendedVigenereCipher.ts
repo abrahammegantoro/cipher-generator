@@ -2,6 +2,8 @@ function encryptExtendedVigenereCipher(
   message: string | Uint8Array,
   key: string
 ): string | Uint8Array {
+  if (key.length === 0) return message;
+
   if (typeof message === 'string') {
     let result = '';
     for (let i = 0; i < message.length; i++) {
@@ -29,6 +31,8 @@ function decryptExtendedVigenereCipher(
   message: string | Uint8Array,
   key: string
 ): string | Uint8Array {
+  if (key.length === 0) return message;
+
   if (typeof message === 'string') {
     let result = '';
     for (let i = 0; i < message.length; i++) {

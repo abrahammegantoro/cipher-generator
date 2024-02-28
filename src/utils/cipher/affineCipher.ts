@@ -1,8 +1,8 @@
-import { removeNonAlphabetExceptSpace } from "../string";
+import { removeNonAplhabet } from "../string";
 
 export function encodeAffine(text: string, a: number, b: number) {
-  text = removeNonAlphabetExceptSpace(text);
-  console.log(text)
+  text = removeNonAplhabet(text);
+  
   let result = "";
   for (let i = 0; i < text.length; i++) {
     const charCode = text.charCodeAt(i);
