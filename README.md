@@ -46,11 +46,11 @@ http://localhost:5173/
 
 ## Tabel Fitur
 
-| No  | Feature                  | Success (✔) | Fail (❌) | Details |
-| :-: | :----------------------- | :---------- | :-------- | :------ |
-|  1  | Vigenere Cipher          | ✔           |           |         |
-|  2  | Extended Vigenere Cipher | ✔           |           |         |
-|  3  | Playfair Cipher          | ✔           |           |         |
-|  4  | Playfair Cipher          | ✔           |           |         |
-|  5  | Affine Cipher            | ✔           |           |         |
-|  6  | Auto-Key Vigenere Cipher | ✔           |           |         |
+| No  | Feature                  | Success (✔) | Fail (❌) | Details                                                                                           |
+| :-: | :----------------------- | :---------- | :-------- | :-----------------------------------------------------------------------------------------------  |
+|  1  | Vigenere Cipher          | ✔           |           |                                                                                                   |
+|  2  | Extended Vigenere Cipher | ✔           |           |                                                                                                   |
+|  3  | Playfair Cipher          | ✔           |           | Perlu dilakukan post-processing penghilangan huruf x dan z yang disisipkan pada plaintext         |
+|  4  | Product Cipher           | ✔           |           | Alphabet dummy ditambahkan apabila huruf tidak memenuhi blok pada proses transpose                |
+|  5  | Affine Cipher            | ✔           |           |                                                                                                   |
+|  6  | Auto-Key Vigenere Cipher | ✔           |           |                                                                                                   |
